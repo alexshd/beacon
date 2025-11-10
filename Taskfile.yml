@@ -1,0 +1,111 @@
+# https://taskfile.dev
+
+version: "3"
+
+silent: true
+
+includes:
+  config-merge:
+    taskfile: ./config-merge-example/Taskfile.yml
+    dir: ./config-merge-example
+
+tasks:
+  default:
+    desc: Show available tasks
+    cmds:
+      - task --list
+
+  show-me:
+    desc: Interactive demonstration of the framework principles
+    cmds:
+      - echo ""
+      - echo " _         ___   __          __   __   "
+      - echo "| |       / _ \\  \\ \\        / /  /_ |  "
+      - echo "| |      | |_| |  \\ \\  /\\  / /    | |  "
+      - echo "| |      |  _  |   \\ \\/  \\/ /     | |  "
+      - echo "| |____  | | | |    \\  /\\  /      | |  "
+      - echo "|______| |_| |_|     \\/  \\/       |_|  "
+      - echo ""
+      - echo "    Mandatory Isolation Through Immutability"
+      - echo ""
+      - echo "  'Show me how you think, and I will find my own way to do it'"
+      - echo ""
+      - echo "📚 What you're about to see:"
+      - echo ""
+      - echo "   1. The PROBLEM - Why shared memory fails under chaos"
+      - echo "   2. The PROOF   - Mathematical verification with lawtest"
+      - echo "   3. The SOLUTION - Immutable state prevents corruption"
+      - echo ""
+      - echo "Press Enter to continue..."
+      - read _
+      - echo ""
+      - echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+      - echo "🧪 FAULT INJECTION TESTS - Proving Law I"
+      - echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+      - echo ""
+      - gotest -v ./faulttest
+      - echo ""
+      - echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+      - echo "✅ Law I Verification Complete"
+      - echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+      - echo ""
+      - echo "💡 Key Insights"
+      - echo ""
+      - echo "   • Immutability is not a style choice - it's mathematical necessity"
+      - echo "   • defer+mutex releases locks but CANNOT prevent corruption"
+      - echo "   • lawtest proves properties that Go's type system cannot"
+      - echo "   • Isolation keeps coupling r < 3 (stable zone)"
+      - echo ""
+      - echo "🔧 Next Steps"
+      - echo ""
+      - echo "   • task dev-faulttest    - Watch mode with auto-verification"
+      - echo "   • task test-faulttest   - Run tests without ceremony"
+      - echo "   • Read faulttest/README.md for deeper understanding"
+      - echo ""
+
+  test:
+    desc: Run all tests
+    cmds:
+      - go test -v ./...
+
+  test-faulttest:
+    desc: Run faulttest package tests only
+    cmds:
+      - go test -v ./faulttest -race -cover
+
+  dev-faulttest:
+    desc: Development mode - auto-run Law I tests on file changes
+    dir: faulttest
+    cmds:
+      - echo ""
+      - echo "🔄 Watch Mode Active - Law I Auto-Verification"
+      - echo ""
+      - echo "Watching faulttest/*.go files"
+      - echo "On change we run all Law I property tests"
+      - echo ""
+      - echo "Edit state.go or state_test.go to see live verification..."
+      - echo ""
+      - air
+
+  clean:
+    desc: Clean build artifacts
+    cmds:
+      - rm -rf {{.BINARY_DIR}}
+      - rm -rf todoserver/tmp demo/tmp
+      - find . -type f -name "*.test" -delete
+      - find . -type f -name "coverage.out" -delete
+      - find . -type f -name "coverage.html" -delete
+      - echo "Clean complete"
+
+  tidy:
+    desc: Tidy go modules
+    cmds:
+      - go mod tidy
+      - go mod verify
+
+  install-tools:
+    desc: Install development tools
+    cmds:
+      - go install github.com/cosmtrek/air@latest
+      - go install github.com/golangci/golangci-lint/cmd/golangci-lint@latest
+      - echo "Development tools installed"

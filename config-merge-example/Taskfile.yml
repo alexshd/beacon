@@ -1,0 +1,47 @@
+# https://taskfile.dev
+
+version: "3"
+
+silent: true
+
+tasks:
+  default:
+    desc: Run all three types of tests
+    cmds:
+      - echo ""
+      - echo "Running all test types..."
+      - echo ""
+      - task: test-normal
+      - echo ""
+      - task: test-law
+      - echo ""
+      - task: test-fuzz
+      - echo ""
+      - echo "All tests complete"
+
+  test-normal:
+    desc: Run traditional unit tests
+    ignore_error: true
+    cmds:
+      - echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+      - echo "📝 TRADITIONAL TESTS - Specific examples"
+      - echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+      - gotest -v -run "^Test(Merge|MergeOverride|DeepMerge)$"
+
+  test-law:
+    desc: Run property-based tests with lawtest
+    ignore_error: true
+    cmds:
+      - echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+      - echo "⚖️  PROPERTY TESTS - Mathematical laws"
+      - echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+      - gotest -v -run "^Test.*Immutability$|^Test.*Associativity$"
+
+  test-fuzz:
+    desc: Run fuzz tests
+    ignore_error: true
+    cmds:
+      - echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+      - echo "🎲 FUZZ TESTS - Random input generation"
+      - echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+      - gotest -fuzz=FuzzMerge -fuzztime=5s
